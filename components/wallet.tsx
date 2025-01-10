@@ -118,75 +118,36 @@ export function WalletPanel() {
   };
 
   return (
-    <div className="w-[500px] h-screen bg-[#1a1a1a] border-l border-[#2a2a2a]">
+    <div className="w-[400px] h-screen bg-[#1a1a1a] border-l border-[#2a2a2a]">
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="p-6 border-b border-[#2a2a2a] backdrop-blur-md bg-gradient-to-r from-[#1a1a1a] via-[#1a1a1a]/95 to-[#1a1a1a] sticky top-0 z-10"
+        className="p-4 border-b border-[#2a2a2a] backdrop-blur-md bg-gradient-to-r from-[#1a1a1a] via-[#1a1a1a]/95 to-[#1a1a1a] sticky top-0 z-10"
       >
         <div className="flex gap-4">
           {/* Portfolio Value Card - Left Side */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex-1 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 rounded-xl p-4 border border-blue-500/20 relative"
-            style={{ perspective: "1000px" }}
+            className="flex-1 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 rounded-xl p-4 border border-blue-500/20"
           >
-            <motion.div
-              className="w-full"
-              initial={false}
-              animate={{ rotateY: showQR ? 180 : 0 }}
-              transition={{ duration: 0.6 }}
-              style={{ transformStyle: "preserve-3d" }}
-            >
-              {/* QR Code Side */}
-              <div 
-                className={`w-full h-full ${showQR ? 'block' : 'hidden'}`}
-                style={{ 
-                  backfaceVisibility: "hidden",
-                  transform: "rotateY(180deg)"
-                }}
-              >
-                {walletAddress && (
-                  <div className="flex flex-col items-center justify-center h-full">
-                    <div className="bg-white p-3 rounded-xl">
-                      <QRCode
-                        value={walletAddress}
-                        size={100}
-                        style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                        viewBox="0 0 120 120"
-                      />
-                    </div>
-                  </div>
-                )}
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-400">Portfolio</p>
+                <motion.div 
+                  key={totalValue}
+                  initial={{ scale: 0.9 }}
+                  animate={{ scale: 1 }}
+                  className="flex items-baseline gap-2"
+                >
+                  <span className="text-xl font-bold text-white">
+                    ${totalValue.toFixed(2)}
+                  </span>
+            
+                </motion.div>
               </div>
-              {/* Portfolio Value Side */}
-              <div 
-                className={`w-full ${showQR ? 'hidden' : 'block'}`}
-                style={{ backfaceVisibility: "hidden" }}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium text-gray-400">Portfolio Value</p>
-                    <motion.div 
-                      key={totalValue}
-                      initial={{ scale: 0.9 }}
-                      animate={{ scale: 1 }}
-                      className="flex items-baseline gap-2"
-                    >
-                      <span className="text-2xl font-bold text-white">
-                        ${totalValue.toFixed(2)}
-                      </span>
-                    </motion.div>
-                  </div>
-                  <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                    <TrendingUp className="w-6 h-6 text-blue-500" />
-                  </div>
-                </div>
-              </div>
-
-              
-            </motion.div>
+             
+            </div>
           </motion.div>
 
           {/* Wallet Info - Right Side */}
@@ -199,18 +160,15 @@ export function WalletPanel() {
               <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
                 <Wallet className="w-5 h-5 text-blue-500" />
               </div>
-              <div>
-                <h2 className="font-medium text-white">Wallet</h2>
-                <p className="text-xs text-gray-400">Connected</p>
-              </div>
-            </div>
-
-            <div className="mt-3 space-y-2">
-              <div 
-                className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-[#2a2a2a] hover:bg-[#333333] transition-colors group cursor-pointer" 
+              <div className='flex flex-col gap-1'>
+                <div>
+                  <h2 className="font-medium text-white ">Wallet</h2>
+                </div>
+                <div 
+                className="flex items-center justify-between gap-2 transition-colors group cursor-pointer" 
                 onClick={handleCopied}
               >
-                <span className="text-sm text-gray-400 font-medium truncate">
+                <span className="text-xs text-gray-400 truncate">
                   {formattedAddress}
                 </span>
                 {copied ? (
@@ -219,18 +177,7 @@ export function WalletPanel() {
                   <Copy className="w-4 h-4 text-gray-500 group-hover:text-gray-300 flex-shrink-0 transition-colors" />
                 )}
               </div>
-
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full text-gray-400 hover:text-white bg-[#2a2a2a] hover:bg-[#333333] h-9"
-                onClick={() => setShowQR(!showQR)}
-              >
-                <div className="flex items-center gap-2">
-                  <QrCode className="h-4 w-4" />
-                  <span className="text-sm">{showQR ? 'Hide QR' : 'Show QR'}</span>
-                </div>
-              </Button>
+              </div>
             </div>
           </motion.div>
         </div>
