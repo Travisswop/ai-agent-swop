@@ -19,8 +19,11 @@ import {
   Mail,
   Square,
   ArrowUpIcon,
+  User,
+  Bot,
 } from 'lucide-react';
-import { toast } from './ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
+import ReactMarkdown from 'react-markdown';
 
 // Define custom Message type that includes tool_calls
 interface CustomMessage extends Message {
@@ -37,6 +40,8 @@ interface CustomMessage extends Message {
 const API_ENDPOINT = '/api/chat';
 
 export function Chat() {
+  const { toast } = useToast()
+  
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
 
   const [showIntermediateSteps, setShowIntermediateSteps] =
@@ -49,39 +54,72 @@ export function Chat() {
   >({});
 
   const {
-    messages,
-    input,
-    setInput,
-    handleInputChange,
-    handleSubmit,
-    isLoading: chatEndpointIsLoading,
-    setMessages,
-  } = useChat({
-    api: API_ENDPOINT,
-    onResponse(response) {
-      const sourcesHeader = response.headers.get('x-sources');
-      const sources = sourcesHeader
-        ? JSON.parse(
-            Buffer.from(sourcesHeader, 'base64').toString('utf8')
-          )
-        : [];
-      const messageIndexHeader =
-        response.headers.get('x-message-index');
-      if (sources.length && messageIndexHeader !== null) {
-        setSourcesForMessages({
-          ...sourcesForMessages,
-          [messageIndexHeader]: sources,
-        });
-      }
-    },
-    onError: (e) => {
-      console.log('🚀 ~ Chat ~ onError:', e);
+		messages,
+		input,
+		setInput,
+		handleInputChange,
+		handleSubmit,
+		isLoading: chatEndpointIsLoading,
+		setMessages,
+	} = useChat({
+		api: API_ENDPOINT,
+		onResponse(response) {
+			const sourcesHeader = response.headers.get("x-sources");
+			const sources = sourcesHeader
+				? JSON.parse(Buffer.from(sourcesHeader, "base64").toString("utf8"))
+				: [];
+			const messageIndexHeader = response.headers.get("x-message-index");
+			if (sources.length && messageIndexHeader !== null) {
+				setSourcesForMessages({
+					...sourcesForMessages,
+					[messageIndexHeader]: sources,
+				});
+			}
+		},
+    streamProtocol: "text",
+		onError: (e) => {
+      console.log('🚀 ~ Chat ~ onError ~ e:', e);
       toast({
-        title: 'Error',
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
         description: e.message,
       });
     },
   });
+
+  // Add function to handle demo prompts
+  const handleDemoPrompt = async (prompt: string) => {
+    setInput(prompt);
+    // Create a synthetic form event
+    const syntheticEvent = {
+      preventDefault: () => {},
+    } as FormEvent<HTMLFormElement>;
+    
+    // Small delay to ensure input is set
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    
+    // Call sendMessage directly
+    await sendMessage(syntheticEvent);
+  };
+
+  // Demo prompts data
+  const demoPrompts = [
+    {
+      icon: <ArrowLeftRight className="h-5 w-5 text-blue-500" />,
+      text: "Swap USDC to SWOP token",
+      prompt: "I want to swap 100 USDC to SWOP tokens. Can you help me with that?",
+    },
+    {
+      icon: <Coins className="h-5 w-5 text-green-500" />,
+      text: "Send Token",
+      prompt: "I want to send 50 SWOP tokens to 0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+    },
+    {
+      icon: <Square className="h-5 w-5 text-purple-500" />,
+      text: "Wallet Address",
+      prompt: "Show me my wallet address and balance",
+    },
+  ];
 
   async function sendMessage(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -177,70 +215,85 @@ export function Chat() {
         {messages.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center p-4">
             <div className="w-16 h-16 rounded-lg bg-[#2a2a2a] mb-4 overflow-hidden">
-              <img
-                src="/placeholder.svg?height=64&width=64"
-                alt="Agent Griffain"
-                className="w-full h-full object-cover"
-              />
+              <Bot className="w-full h-full p-3 text-blue-500" />
             </div>
             <h1 className="text-xl font-semibold mb-1">
-              Hi, I'm Agent Griffain
+              Hi, I'm SWAI
             </h1>
-            <p className="text-sm text-gray-400">How can I help?</p>
+            <p className="text-sm text-gray-400">Your AI Trading Assistant</p>
 
-            <div className="max-w-2xl w-full mt-8 space-y-3">
-              <div className="flex flex-wrap gap-2 justify-center">
-                <Button
-                  variant="outline"
-                  className="bg-[#2a2a2a] border-[#3a3a3a] hover:bg-[#3a3a3a] rounded-2xl px-6 py-3 transition-colors duration-200"
-                >
-                  <Coins className="h-4 w-4 mr-2" />
-                  Tokens
-                </Button>
-                <Button
-                  variant="outline"
-                  className="bg-[#2a2a2a] border-[#3a3a3a] hover:bg-[#3a3a3a] rounded-2xl px-6 py-3 transition-colors duration-200"
-                >
-                  <Square className="h-4 w-4 mr-2" />
-                  NFTs
-                </Button>
-                <Button
-                  variant="outline"
-                  className="bg-[#2a2a2a] border-[#3a3a3a] hover:bg-[#3a3a3a] rounded-2xl px-6 py-3 transition-colors duration-200"
-                >
-                  <ArrowLeftRight className="h-4 w-4 mr-2" />
-                  Swap
-                </Button>
+            <div className="max-w-2xl w-full mt-8">
+              <p className="text-center text-sm text-gray-400 mb-6">Try these examples:</p>
+              <div className="grid grid-cols-1 gap-2">
+                {demoPrompts.map((prompt, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleDemoPrompt(prompt.prompt)}
+                    className="w-full bg-[#1E1E1E] hover:bg-[#2A2A2A] border border-[#333333] rounded-lg p-4 transition-all duration-200 flex items-center group text-left"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-[#2A2A2A] group-hover:bg-[#333333] flex items-center justify-center flex-shrink-0 transition-colors">
+                      {prompt.icon}
+                    </div>
+                    <div className="ml-4 flex-1">
+                      <h3 className="text-[15px] font-medium text-gray-200">{prompt.text}</h3>
+                      <p className="text-sm text-gray-500 mt-0.5 line-clamp-1">{prompt.prompt}</p>
+                    </div>
+                  </button>
+                ))}
               </div>
             </div>
           </div>
         ) : (
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div className="flex-1 overflow-y-auto p-4 space-y-6">
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex ${
+                className={`flex items-start gap-4 ${
                   message.role === 'user'
-                    ? 'justify-end'
-                    : 'justify-start'
+                    ? 'flex-row-reverse'
+                    : 'flex-row'
                 }`}
               >
+                <div className="flex-shrink-0">
+                  {message.role === 'user' ? (
+                    <div className="w-8 h-8 rounded-full bg-[#2a2a2a] flex items-center justify-center">
+                      <User className="w-5 h-5 text-gray-400" />
+                    </div>
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">
+                      <Bot className="w-5 h-5 text-blue-500" />
+                    </div>
+                  )}
+                </div>
                 <div
-                  className={`rounded-lg px-4 py-2 max-w-[80%] ${
-                    message.role === 'user'
-                      ? 'bg-[#2a2a2a]'
-                      : 'bg-[#2a2a2a]'
+                  className={`flex flex-col space-y-1 ${
+                    message.role === 'user' ? 'items-end' : 'items-start'
                   }`}
                 >
-                  {message.content}
+                  <div className="text-sm text-gray-400">
+                    {message.role === 'user' ? 'You' : 'SWAI'}
+                  </div>
+                  <div
+                    className={`rounded-lg px-4 py-2 max-w-[80%] ${
+                      message.role === 'user'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-[#2a2a2a]'
+                    }`}
+                  >
+                    <ReactMarkdown className="prose prose-invert">
+                      {message.content}
+                    </ReactMarkdown>
+                  </div>
                 </div>
               </div>
             ))}
 
-            {/* Loading indicator */}
             {chatEndpointIsLoading && (
-              <div className="flex justify-start">
-                <div className="rounded-2xl px-4 py-2 bg-[#383838]">
+              <div className="flex items-start gap-4">
+                <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">
+                  <Bot className="w-5 h-5 text-blue-500" />
+                </div>
+                <div className="rounded-lg px-4 py-2 bg-[#2a2a2a]">
                   <LoadingDots />
                 </div>
               </div>
@@ -248,7 +301,6 @@ export function Chat() {
           </div>
         )}
 
-        {/* Input form */}
         <div className="border-t border-[#2a2a2a] p-4">
           <form
             onSubmit={sendMessage}
@@ -258,7 +310,7 @@ export function Chat() {
               <textarea
                 value={input}
                 onChange={handleInputChange}
-                placeholder="Message ChatGPT..."
+                placeholder="Message SWAI..."
                 rows={1}
                 className="w-full px-4 py-4 pr-20 bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none overflow-hidden min-h-[60px] max-h-[200px]"
                 style={{
