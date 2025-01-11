@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ReactMarkdown from 'react-markdown';
+import { AnimatedBot } from './animate-bot';
 
 // Define custom Message type that includes tool_calls
 interface CustomMessage extends Message {
@@ -36,6 +37,30 @@ interface CustomMessage extends Message {
     };
   }>;
 }
+
+const scrollbarStyles = `
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #4a4a4a;
+    border-radius: 4px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #5a5a5a;
+  }
+
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #4a4a4a transparent;
+  }
+`;
 
 const API_ENDPOINT = '/api/chat';
 
@@ -210,20 +235,22 @@ export function Chat() {
   }
 
   return (
+    <>
+    <style>{scrollbarStyles}</style>
     <div className="flex flex-1">
       <div className="flex-1 flex flex-col h-screen bg-[#1a1a1a] text-white">
         {messages.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center p-4">
-            <div className="w-16 h-16 rounded-lg bg-[#2a2a2a] mb-4 overflow-hidden">
-              <Bot className="w-full h-full p-3 text-blue-500" />
+            <div className="mb-1">
+            <AnimatedBot size="md" color="#ec4899" /> {/* pink-500 */}
             </div>
-            <h1 className="text-xl font-semibold mb-1">
-              Hi, I'm SWAI
+            <h1 className="text-xl font-semibold mb-1 text-white">
+              Hi, I'm Swopphoria
             </h1>
-            <p className="text-sm text-gray-400">Your AI Trading Assistant</p>
+            <p className="text-sm text-gray-400 mb-8">Your AI Trading Assistant</p>
 
-            <div className="max-w-2xl w-full mt-8">
-              <p className="text-center text-sm text-gray-400 mb-6">Try these examples:</p>
+            <div className="w-full max-w-2xl space-y-4">
+              <p className="text-center text-sm text-gray-400 mb-4">Try these examples:</p>
               <div className="grid grid-cols-1 gap-2">
                 {demoPrompts.map((prompt, index) => (
                   <button
@@ -244,102 +271,128 @@ export function Chat() {
             </div>
           </div>
         ) : (
-          <div className="flex-1 overflow-y-auto p-4 space-y-6">
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex items-start gap-4 ${
-                  message.role === 'user'
-                    ? 'flex-row-reverse'
-                    : 'flex-row'
-                }`}
-              >
-                <div className="flex-shrink-0">
-                  {message.role === 'user' ? (
-                    <div className="w-8 h-8 rounded-full bg-[#2a2a2a] flex items-center justify-center">
-                      <User className="w-5 h-5 text-gray-400" />
-                    </div>
-                  ) : (
-                    <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">
-                      <Bot className="w-5 h-5 text-blue-500" />
-                    </div>
-                  )}
-                </div>
+          <>
+            {/* Messages Container */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-6 max-w-5xl mx-auto w-full">
+              {messages.map((message) => (
                 <div
-                  className={`flex flex-col space-y-1 ${
-                    message.role === 'user' ? 'items-end' : 'items-start'
+                  key={message.id}
+                  className={`flex items-start gap-4 max-w-[85%] ${
+                    message.role === 'user'
+                      ? 'ml-auto flex-row-reverse'
+                      : ''
                   }`}
                 >
-                  <div className="text-sm text-gray-400">
-                    {message.role === 'user' ? 'You' : 'SWAI'}
+                  <div className="flex-shrink-0">
+                  {message.role === 'user' ? (
+                        <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                          <User className="w-5 h-5 text-blue-500" />
+                        </div>
+                      ) : (
+                        <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                          <Bot className="w-5 h-5 text-purple-500" />
+                        </div>
+                      )}
                   </div>
                   <div
-                    className={`rounded-lg px-4 py-2 max-w-[80%] ${
-                      message.role === 'user'
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-[#2a2a2a]'
+                    className={`flex flex-col space-y-1 ${
+                      message.role === 'user' ? 'items-end' : 'items-start'
                     }`}
                   >
-                    <ReactMarkdown className="prose prose-invert">
-                      {message.content}
-                    </ReactMarkdown>
+                    <div className="text-sm text-gray-400">
+                      {message.role === 'user' ? 'You' : 'SWOPPHORIA'}
+                    </div>
+                    <div
+                      className={`rounded-2xl px-4 py-2 ${
+                        message.role === 'user'
+                          ? 'bg-blue-500 text-white rounded-tr-none'
+                          : 'bg-[#2a2a2a] rounded-tl-none'
+                      }`}
+                    >
+                      <ReactMarkdown 
+                        className={`prose ${message.role === 'user' ? 'prose-invert' : 'prose-invert'} max-w-none`}
+                        components={{
+                          p: ({node, ...props}) => <p className="m-0" {...props} />,
+                          pre: ({node, ...props}) => (
+                            <pre className="bg-[#1E1E1E] rounded-lg p-4 overflow-x-auto" {...props} />
+                          ),
+                          code: ({node, inline, ...props}) => (
+                            inline 
+                              ? <code className="bg-[#2a2a2a] rounded px-1 py-0.5" {...props} />
+                              : <code className="text-sm" {...props} />
+                          )
+                        }}
+                      >
+                        {message.content}
+                      </ReactMarkdown>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
 
-            {chatEndpointIsLoading && (
-              <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">
-                  <Bot className="w-5 h-5 text-blue-500" />
+              {chatEndpointIsLoading && (
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">
+                    <Bot className="w-5 h-5 text-blue-500" />
+                  </div>
+                  <div className="rounded-2xl px-4 py-2 bg-[#2a2a2a] rounded-tl-none">
+                    <LoadingDots />
+                  </div>
                 </div>
-                <div className="rounded-lg px-4 py-2 bg-[#2a2a2a]">
-                  <LoadingDots />
-                </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          </>
         )}
-
-        <div className="border-t border-[#2a2a2a] p-4">
-          <form
-            onSubmit={sendMessage}
-            className="relative max-w-4xl mx-auto"
-          >
-            <div className="relative">
-              <textarea
-                value={input}
-                onChange={handleInputChange}
-                placeholder="Message SWAI..."
-                rows={1}
-                className="w-full px-4 py-4 pr-20 bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none overflow-hidden min-h-[60px] max-h-[200px]"
-                style={{
-                  height: 'auto',
-                  minHeight: '60px',
-                  maxHeight: '200px',
-                }}
-                onInput={(e) => {
-                  const target = e.target as HTMLTextAreaElement;
-                  target.style.height = 'auto';
-                  target.style.height = `${Math.min(
-                    target.scrollHeight,
-                    200
-                  )}px`;
-                }}
-              />
-              <div className="absolute right-2 bottom-2 flex items-center space-x-2">
+        <div className="border-t border-[#2a2a2a] bg-[#1a1a1a]">
+          <div className="max-w-4xl mx-auto p-4">
+            <form
+              onSubmit={sendMessage}
+              className="relative flex flex-col items-center"
+            >
+              <div className="relative w-full">
+                <textarea
+                  value={input}
+                  onChange={handleInputChange}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      if (input.trim() && !chatEndpointIsLoading) {
+                        sendMessage(e as unknown as FormEvent<HTMLFormElement>);
+                      }
+                    }
+                  }}
+                  placeholder="Message SWAI..."
+                  rows={2}
+                  className="w-full px-4 py-3 pr-12 bg-[#2a2a2a] border border-[#3a3a3a] hover:border-[#4a4a4a] focus:border-blue-500 rounded-xl text-white placeholder-gray-400 focus:outline-none resize-none overflow-hidden shadow-sm transition-colors"
+                  style={{
+                    height: 'auto',
+                    minHeight: '72px',
+                    maxHeight: '300px',
+                  }}
+                  onInput={(e) => {
+                    const target = e.target as HTMLTextAreaElement;
+                    target.style.height = 'auto';
+                    target.style.height = `${Math.min(
+                      target.scrollHeight,
+                      300
+                    )}px`;
+                  }}
+                />
                 <button
                   type="submit"
                   disabled={chatEndpointIsLoading || !input.trim()}
-                  className="p-2 hover:bg-[#3a3a3a] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="absolute right-2 bottom-4 p-1.5 bg-white hover:bg-blue-600 disabled:bg-[#3a3a3a] disabled:opacity-50 rounded-full transition-colors disabled:cursor-not-allowed flex items-center justify-center"
                 >
-                  <ArrowUpIcon className="w-5 h-5 text-gray-400" />
+                  <ArrowUpIcon className="w-4 h-4 text-black" />
                 </button>
               </div>
-            </div>
-          </form>
+             
+            </form>
+          </div>
         </div>
-      </div>
     </div>
+    {/* <WalletPanel /> */}
+    </div>
+    </>
   );
 }
