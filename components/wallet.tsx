@@ -125,18 +125,18 @@ export function WalletPanel() {
 
   return (
     <>
-      <div className="w-[400px] h-screen bg-[#1a1a1a] border-l border-[#2a2a2a] flex flex-col">
+      <div className="w-[400px] h-screen bg-[#1a1a1a]/80 backdrop-blur-xl border-l border-[#2a2a2a] flex flex-col">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-4 border-b border-[#2a2a2a] backdrop-blur-md bg-gradient-to-r from-[#1a1a1a] via-[#1a1a1a]/95 to-[#1a1a1a] sticky top-0 z-10"
+          className="p-4 border-b border-[#2a2a2a] backdrop-blur-md bg-gradient-to-r from-[#1a1a1a]/80 via-[#1a1a1a]/70 to-[#1a1a1a]/80 sticky top-0 z-10"
         >
           <div className="flex gap-4">
             {/* Portfolio Value Card - Left Side */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex-1 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 rounded-xl p-4 border border-blue-500/20"
+              className="flex-1 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 backdrop-blur-sm rounded-xl p-4 border border-blue-500/20"
             >
               <div className="flex items-center justify-between">
                 <div>
@@ -161,7 +161,7 @@ export function WalletPanel() {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex flex-col justify-between bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-purple-500/10 rounded-xl p-4 w-[200px] border border-blue-500/20"
+              className="flex flex-col justify-between bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-xl p-4 w-[200px] border border-blue-500/20"
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
@@ -193,17 +193,17 @@ export function WalletPanel() {
         </motion.div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden backdrop-blur-md bg-[#1a1a1a]/50">
           <div className="h-full overflow-y-auto custom-scrollbar px-4">
             {/* Token List Header with Refresh Button */}
-            <div className="flex items-center justify-between sticky top-0 pt-4 pb-2 bg-[#1a1a1a] z-10">
+            <div className="flex items-center justify-between sticky top-0 pt-4 pb-2 bg-[#1a1a1a]/50 backdrop-blur-sm z-10">
               <h3 className="text-lg font-medium text-white">
                 Token(s)
               </h3>
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-gray-400 hover:text-white bg-[#2a2a2a] hover:bg-[#333333] h-8"
+                className="text-gray-400 hover:text-white bg-[#2a2a2a]/80 hover:bg-[#333333]/80 backdrop-blur-sm h-8"
                 onClick={handleRefresh}
                 disabled={isLoadingTokens}
               >
@@ -249,9 +249,9 @@ export function WalletPanel() {
                        ${
                          token.tags.includes('native')
                            ? 'bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20'
-                           : 'bg-[#2a2a2a]'
+                           : 'bg-[#2a2a2a]/80 backdrop-blur-sm'
                        }
-                       hover:bg-[#333333] transition-all duration-300 rounded-xl p-4
+                       hover:bg-[#333333]/80 transition-all duration-300 rounded-xl p-4
                        hover:shadow-lg hover:shadow-blue-500/5
                      `}
                     >

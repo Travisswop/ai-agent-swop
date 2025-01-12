@@ -4,17 +4,15 @@ import { Message } from 'ai';
 import { useChat } from 'ai/react';
 import { useRef, useState, ReactElement } from 'react';
 import type { FormEvent } from 'react';
-import { LoadingDots } from '@/components/ui/loading-dots';
+
 import {
   Coins,
   ArrowLeftRight,
   Square,
   ArrowUpIcon,
-  User,
-  Bot,
+  Wallet,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import ReactMarkdown from 'react-markdown';
 import { AnimatedBot } from './animate-bot';
 import { Messages } from './messages';
 
@@ -101,19 +99,17 @@ export function Chat() {
     {
       icon: <ArrowLeftRight className="h-5 w-5 text-blue-500" />,
       text: 'Swap USDC to SWOP token',
-      prompt:
-        'I want to swap 100 USDC to SWOP tokens. Can you help me with that?',
+      prompt: 'I want to swap 1 USDC...',
     },
     {
       icon: <Coins className="h-5 w-5 text-green-500" />,
       text: 'Send Token',
-      prompt:
-        'I want to send 50 SWOP tokens to 0x742d35Cc6634C0532925a3b844Bc454e4438f44e',
+      prompt: 'I want to send 50 SWOP tokens to...',
     },
     {
-      icon: <Square className="h-5 w-5 text-purple-500" />,
+      icon: <Wallet className="h-5 w-5 text-purple-500" />,
       text: 'Wallet Address',
-      prompt: 'Show me my wallet address and balance',
+      prompt: 'Show me my wallet address',
     },
   ];
 
@@ -148,7 +144,6 @@ export function Chat() {
         }),
       });
       const json = await response.json();
-      console.log('🚀 ~ sendMessage ~ json:', json);
       setIntermediateStepsLoading(false);
       if (response.status === 200) {
         const responseMessages = json.messages as CustomMessage[];
@@ -206,13 +201,13 @@ export function Chat() {
   }
 
   return (
-    <div className="flex-1 flex flex-col h-screen bg-[#1a1a1a] text-white">
+    <div className="flex-1 flex flex-col h-screen bg-[#1E1E1E] text-white">
       {messages.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center p-4">
           <div className="mb-1">
-            <AnimatedBot size="md" color="#ec4899" /> {/* pink-500 */}
+            <AnimatedBot size="lg" color="#ec4899" /> {/* pink-500 */}
           </div>
-          <h1 className="text-xl font-semibold mb-1 text-white">
+          <h1 className="text-2xl font-bold mb-1 text-gray-200">
             Hi, I'm Swopphoria
           </h1>
           <p className="text-sm text-gray-400 mb-8">

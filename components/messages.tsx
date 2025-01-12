@@ -26,11 +26,11 @@ export function Messages({ messages, isLoading }: MessagesProps) {
           >
             <div className="flex-shrink-0">
               {message.role === 'user' ? (
-                <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-blue-500/15 flex items-center justify-center">
                   <User className="w-5 h-5 text-blue-500" />
                 </div>
               ) : (
-                <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-purple-500/15 flex items-center justify-center">
                   <Bot className="w-5 h-5 text-purple-500" />
                 </div>
               )}
@@ -40,14 +40,14 @@ export function Messages({ messages, isLoading }: MessagesProps) {
                 message.role === 'user' ? 'items-end' : 'items-start'
               }`}
             >
-              <div className="text-sm text-gray-400">
+              <div className="text-sm text-gray-300">
                 {message.role === 'user' ? 'You' : 'SWOPPHORIA'}
               </div>
               <div
                 className={`rounded-2xl px-4 py-2 ${
                   message.role === 'user'
                     ? 'bg-blue-500 text-white rounded-tr-none'
-                    : 'bg-[#2a2a2a] rounded-tl-none'
+                    : 'bg-[#363636] rounded-tl-none'
                 }`}
               >
                 <ReactMarkdown
@@ -62,13 +62,13 @@ export function Messages({ messages, isLoading }: MessagesProps) {
                     ),
                     pre: ({ node, ...props }) => (
                       <pre
-                        className="bg-[#1E1E1E] rounded-lg p-4 overflow-x-auto"
+                        className="bg-[#2a2a2a] rounded-lg p-4 overflow-x-auto"
                         {...props}
                       />
                     ),
                     code: ({ node, ...props }) => (
                       <code
-                        className="bg-[#2a2a2a] rounded px-1 py-0.5"
+                        className="bg-[#404040] rounded px-1 py-0.5"
                         {...props}
                       />
                     ),
@@ -83,10 +83,10 @@ export function Messages({ messages, isLoading }: MessagesProps) {
 
         {isLoading && (
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-purple-500/15 flex items-center justify-center">
               <Bot className="w-5 h-5 text-purple-500" />
             </div>
-            <div className="rounded-2xl px-4 py-2 bg-[#2a2a2a] rounded-tl-none">
+            <div className="rounded-2xl px-4 py-2 bg-[#363636] rounded-tl-none">
               <LoadingDots />
             </div>
           </div>
