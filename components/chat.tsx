@@ -269,7 +269,7 @@ export function Chat() {
                     }
                   }
                 }}
-                placeholder="Message SWAI..."
+                placeholder="Message QuantBot..."
                 rows={2}
                 className="w-full px-4 py-3 pr-12 bg-[#2a2a2a] border border-[#3a3a3a] hover:border-[#4a4a4a] focus:border-blue-500 rounded-xl text-white placeholder-gray-400 focus:outline-none resize-none overflow-hidden shadow-sm transition-colors"
                 style={{
