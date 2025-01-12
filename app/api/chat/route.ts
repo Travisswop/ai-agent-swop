@@ -10,11 +10,11 @@ const llm = new ChatOpenAI({
 });
 
 const solanaAgent = new SolanaAgentKit(
-	process.env.SOLANA_PRIVATE_KEY!,
-	process.env.RPC_URL!,
-	{
-		OPENAI_API_KEY: process.env.OPENAI_API_KEY!,
-	},
+  process.env.NEXT_PUBLIC_WALLET_PRIVATE_KEY!,
+  process.env.RPC_URL!,
+  {
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY!,
+  }
 );
 
 const tools = createSolanaTools(solanaAgent);
