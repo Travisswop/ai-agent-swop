@@ -208,7 +208,7 @@ export function Chat() {
             <AnimatedBot size="lg" color="#ec4899" /> {/* pink-500 */}
           </div>
           <h1 className="text-2xl font-bold mb-1 text-gray-200">
-            Hi, I'm Swopphoria
+            Hi, I'm QuantBot
           </h1>
           <p className="text-sm text-gray-400 mb-8">
             Your AI Trading Assistant
