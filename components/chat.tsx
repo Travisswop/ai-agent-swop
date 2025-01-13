@@ -207,12 +207,15 @@ export function Chat() {
         <div className="flex-1 flex flex-col items-center justify-center p-4">
           <div className="mb-1">
             {/* <AnimatedBot size="lg" color="#ec4899" /> pink-500 */}
-            <Image
-              src="/astro.png"
-              alt="Astro"
-              width={120}
-              height={120}
-            />
+            <div className="animate-float">
+              <Image
+                src="/astro.png"
+                alt="astronot image"
+                width={120}
+                height={120}
+                priority
+              />
+            </div>
           </div>
           <h1 className="text-2xl font-bold mb-1 text-gray-200">
             Hi, I'm Astro
