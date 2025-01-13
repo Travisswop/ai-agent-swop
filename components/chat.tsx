@@ -15,6 +15,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { AnimatedBot } from './animate-bot';
 import { Messages } from './messages';
+import Image from 'next/image';
 
 interface CustomMessage extends Message {
   tool_calls?: Array<{
@@ -205,10 +206,16 @@ export function Chat() {
       {messages.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center p-4">
           <div className="mb-1">
-            <AnimatedBot size="lg" color="#ec4899" /> {/* pink-500 */}
+            {/* <AnimatedBot size="lg" color="#ec4899" /> pink-500 */}
+            <Image
+              src="/astro.png"
+              alt="Astro"
+              width={120}
+              height={120}
+            />
           </div>
           <h1 className="text-2xl font-bold mb-1 text-gray-200">
-            Hi, I'm QuantBot
+            Hi, I'm Astro
           </h1>
           <p className="text-sm text-gray-400 mb-8">
             Your AI Trading Assistant
@@ -269,7 +276,7 @@ export function Chat() {
                     }
                   }
                 }}
-                placeholder="Message QuantBot..."
+                placeholder="Message Astro..."
                 rows={2}
                 className="w-full px-4 py-3 pr-12 bg-[#2a2a2a] border border-[#3a3a3a] hover:border-[#4a4a4a] focus:border-blue-500 rounded-xl text-white placeholder-gray-400 focus:outline-none resize-none overflow-hidden shadow-sm transition-colors"
                 style={{

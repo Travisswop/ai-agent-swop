@@ -41,7 +41,7 @@ export function Messages({ messages, isLoading }: MessagesProps) {
               }`}
             >
               <div className="text-sm text-gray-300">
-                {message.role === 'user' ? 'You' : 'QuantBot'}
+                {message.role === 'user' ? 'You' : 'Astro'}
               </div>
               <div
                 className={`rounded-2xl px-4 py-2 ${
